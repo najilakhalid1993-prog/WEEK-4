@@ -1,0 +1,635 @@
+/*
+====================================================
+DAY 5 - FILE 4
+TOPIC: CONVERT CALLBACK TO PROMISE
+====================================================
+
+1. What is a callback?
+2. Callback-based asynchronous function
+3. What is callback hell?
+4. Converting callback into a Promise
+5. Using then() and catch()
+6. Using async/await
+7. Handling errors
+8. Practical tasks
+*/
+
+
+// ==================================================
+// 1. WHAT IS A CALLBACK?
+// ==================================================
+
+/*
+A callback is a function passed as an argument
+to another function.
+
+The receiving function calls it when needed.
+*/
+
+function greet(name, callback) {
+    console.log("Hello " + name);
+
+    callback();
+}
+
+function sayWelcome() {
+    console.log("Welcome!");
+}
+
+greet("Neji", sayWelcome);
+
+/*
+OUTPUT:
+Hello Neji
+Welcome!
+*/
+
+
+// ==================================================
+// 2. CALLBACK-BASED ASYNCHRONOUS FUNCTION
+// ==================================================
+
+/*
+Here, setTimeout simulates an asynchronous operation.
+
+The callback executes after 2 seconds.
+*/
+
+function getUser(callback) {
+
+    setTimeout(() => {
+
+        const user = {
+            id: 1,
+            name: "Neji"
+        };
+
+        callback(user);
+
+    }, 2000);
+}
+
+getUser((user) => {
+    console.log(user);
+});
+
+/*
+OUTPUT AFTER 2 SECONDS:
+{ id: 1, name: "Neji" }
+*/
+
+
+// ==================================================
+// 3. WHAT IS CALLBACK HELL?
+// ==================================================
+
+/*
+Callback hell happens when multiple callbacks
+are nested inside one another.
+
+It makes code difficult to read and maintain.
+*/
+
+function getUserData(callback) {
+
+    setTimeout(() => {
+
+        console.log("User data received");
+
+        callback();
+
+    }, 1000);
+}
+
+function getOrders(callback) {
+
+    setTimeout(() => {
+
+        console.log("Orders received");
+
+        callback();
+
+    }, 1000);
+}
+
+function getPayment(callback) {
+
+    setTimeout(() => {
+
+        console.log("Payment received");
+
+        callback();
+
+    }, 1000);
+}
+
+getUserData(() => {
+
+    getOrders(() => {
+
+        getPayment(() => {
+
+            console.log("Process completed");
+
+        });
+
+    });
+
+});
+
+/*
+OUTPUT:
+User data received
+Orders received
+Payment received
+Process completed
+*/
+
+
+// ==================================================
+// 4. CONVERTING CALLBACK INTO A PROMISE
+// ==================================================
+
+/*
+Instead of accepting a callback,
+we return a Promise.
+
+resolve() is used when the operation succeeds.
+reject() is used when the operation fails.
+*/
+
+function getUserPromise() {
+
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+
+            const user = {
+                id: 1,
+                name: "Neji"
+            };
+
+            resolve(user);
+
+        }, 2000);
+
+    });
+}
+
+getUserPromise()
+    .then((user) => {
+        console.log(user);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+/*
+OUTPUT AFTER 2 SECONDS:
+{ id: 1, name: "Neji" }
+*/
+
+
+// ==================================================
+// 5. CONVERTING CALLBACK HELL INTO PROMISE CHAINING
+// ==================================================
+
+function getUser() {
+
+    return new Promise((resolve) => {
+
+        setTimeout(() => {
+            console.log("User data received");
+            resolve();
+        }, 1000);
+
+    });
+}
+
+function getOrders() {
+
+    return new Promise((resolve) => {
+
+        setTimeout(() => {
+            console.log("Orders received");
+            resolve();
+        }, 1000);
+
+    });
+}
+
+function getPayment() {
+
+    return new Promise((resolve) => {
+
+        setTimeout(() => {
+            console.log("Payment received");
+            resolve();
+        }, 1000);
+
+    });
+}
+
+getUser()
+    .then(() => {
+        return getOrders();
+    })
+    .then(() => {
+        return getPayment();
+    })
+    .then(() => {
+        console.log("Process completed");
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+/*
+OUTPUT:
+User data received
+Orders received
+Payment received
+Process completed
+*/
+
+
+// ==================================================
+// 6. USING ASYNC/AWAIT
+// ==================================================
+
+/*
+async/await makes asynchronous code
+look more like normal synchronous code.
+
+await waits for a Promise to settle.
+*/
+
+async function processData() {
+
+    await getUser();
+
+    await getOrders();
+
+    await getPayment();
+
+    console.log("All tasks completed");
+
+}
+
+processData();
+
+/*
+OUTPUT:
+User data received
+Orders received
+Payment received
+All tasks completed
+*/
+
+
+// ==================================================
+// 7. ERROR HANDLING
+// ==================================================
+
+function checkUser() {
+
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+
+            const success = false;
+
+            if (success) {
+                resolve("User found");
+            } else {
+                reject("User not found");
+            }
+
+        }, 1000);
+
+    });
+
+}
+
+checkUser()
+    .then((result) => {
+        console.log(result);
+    })
+    .catch((error) => {
+        console.log("Error:", error);
+    });
+
+/*
+OUTPUT:
+Error: User not found
+*/
+
+
+// ==================================================
+// 8. PRACTICAL TASKS
+// ==================================================
+
+/*
+TASK 1:
+Create a callback-based function named getProduct().
+After 2 seconds, return a product object through
+a callback.
+
+Product:
+{
+    id: 101,
+    name: "Laptop",
+    price: 50000
+}
+*/
+
+function getproduct(callback){
+    setTimeout(()=>{
+        const product = {
+            id:101,
+            name:"Laptop",
+            price :5000
+        }
+        
+    },2000)
+    callback(product)
+
+}
+getproduct((product)=>{
+    console.log(product)
+})
+
+
+/*
+TASK 2:
+Convert the getProduct() function from Task 1
+into a Promise-based function.
+
+Use resolve() to return the product.
+Display the product using then().
+*/
+function getproduct(){
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            const product = {
+            id:101,
+            name:"Laptop",
+            price :5000
+        }
+            resolve (product)
+        },2000)
+    })
+}
+getproduct()
+.then((product)=>{
+    console.log(product);
+})
+.catch ((error)=>{
+    console.log(error)
+})
+
+
+/*
+TASK 3:
+Create a Promise-based function named getStudent().
+
+Resolve:
+{
+    id: 1,
+    name: "Rahul"
+}
+
+Display the result using then().
+*/
+function getStudent(){
+    return new Promise((resolve, reject)=>{
+        const student= {
+            id:1,
+            name :"Rahul"
+        }
+        resolve(student)
+    })
+
+}
+getStudent().then((student)=>{
+    console.log(student)
+})
+
+
+/*
+TASK 4:
+Create a Promise that rejects with the message
+"Something went wrong".
+
+Handle the error using catch().
+*/
+const myPromise= new Promise((resolve, reject)=>{
+    reject ("Something went wrong")
+});
+myPromise
+.then((result)=>{
+    console.log(result)
+})
+.catch((error)=>{
+    console.log(error)
+})
+
+    
+
+
+/*
+TASK 5:
+Create three Promise-based functions:
+
+getUser()
+getProfile()
+getSettings()
+
+Chain them using then().
+
+Expected output:
+User received
+Profile received
+Settings received
+Process completed
+*/
+function getuser(){
+    return new Promise((resolve)=>{
+        resolve("User received")
+    })
+}
+function getProfile(){
+    return new Promise((resolve)=>{
+        resolve("Profile recieved")
+    })
+}
+function getSettings(){
+    return new Promise((resolve)=>{
+        resolve("Settings received")
+    })
+}
+getUser()
+.then((result)=>{
+    console.log(result)
+    return getProfile()
+})
+.then((result)=>{
+    console.log(result)
+    return getSettings()
+})
+.then((result)=>{
+    console.log(result);
+    console.log("Process completed")
+})
+.catch((error)=>{
+    console.log(error)
+})
+
+
+/*
+TASK 6:
+Convert Task 5 into async/await.
+
+Use one async function to call all three functions
+in the correct order.
+*/
+ async function processData(){
+    const user = await getuser();
+    console.log(user);
+    const profile = await getProfile();
+    console.log(profile);
+    const settings = await getSettings();
+    console.log(settings)
+    console.log("Process completed")
+
+}
+processData();
+
+
+/*
+TASK 7:
+Create a Promise-based function named login().
+
+If isLoggedIn is true:
+Resolve with "Login successful".
+
+Otherwise:
+Reject with "Login failed".
+
+Handle both success and error.
+*/
+function login() {
+    return new Promise((resolve,reject)=>{
+        let isLoggedIn = true;
+        if(isLoggedIn){
+            resolve("Login successful")
+        } else {
+            reject("Login Failed")
+        }
+    })
+}
+login()
+.then((result)=>{
+    console.log(result)
+})
+.catch((error)=>{
+    console.log(error)
+})
+
+
+
+/*
+TASK 8:
+Create a function named getMarks() that returns
+a Promise.
+
+Resolve with 90 after 1 second.
+
+Use async/await to display the marks.
+*/
+ function getmarks(){
+    return Promise.resolve(()=>{
+        resolve("90")
+    })
+ }
+ async function DisplayMark (){
+    const report= await getmarks();
+    console.log(report);
+ }
+
+
+/*
+TASK 9:
+Create a Promise-based function named fetchData().
+
+Reject with "Network error".
+
+Use async/await and try/catch to handle the error.
+*/
+function fetchdata(){
+    return new Promise((resolve, reject)=>{
+        reject("Network error")
+    })
+}
+async function displayFetcheddata(){
+    try{
+        const result= await fetchdata()
+        console.log(result)
+    } catch (error){
+        console.log("Error :", error)
+
+    }
+}
+displayFetcheddata()
+
+
+/*
+TASK 10:
+Explain the difference between:
+
+1. Callback
+2. Promise
+3. Async/await
+
+Write one example for each.
+
+1. Callback
+   A function passed as an argument to another function
+*/
+    function greetCallback(callback){
+        callback();
+    }
+    greetCallback(()=>{
+        console.log("Hello!!!")
+    })
+
+/*
+   2. Promise
+      An object representing the eventual success or failure of
+      an asynchronous operation.
+*/
+    const promise = new Promise((resolve,reject)=>{
+        resolve("Task completed")
+    });
+    promise.then((result)=>{
+        console.log(result)
+    })
+
+    /*
+        3. Async/Await
+           A clear way to work with Promises await pauses the async function until
+           the Promise settles
+    */
+        function GetData(){
+            return Promise.resolve("Data recieved")
+        }
+        async function DisplayData(){
+            const Result = await GetData()
+            console.log(Result)
+        }
+
+
+
+// ==================================================
+// END OF FILE 4
+// ==================================================
